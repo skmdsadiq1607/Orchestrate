@@ -1,19 +1,23 @@
 """
-Evaluation Benchmark Runner for Ghost Data Still Exists.
+Evaluation entry point for HackerRank Orchestrate: Ghost Data Still Exists.
+Runs the evaluation benchmark against sample_deletion_requests.csv.
 """
 import sys
 import os
-import subprocess
 
-def run_evaluation():
-    print("Running Ghost Data Still Exists Evaluation Benchmark...")
-    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    main_script = os.path.join(repo_root, "code", "main.py")
-    cmd = [sys.executable, main_script, "--evaluate"]
-    result = subprocess.run(cmd, cwd=repo_root, capture_output=True, text=True)
-    print(result.stdout)
-    if result.stderr:
-        print(result.stderr, file=sys.stderr)
+# Add repo root and code directory to path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+root_dir = os.path.dirname(parent_dir) if os.path.basename(parent_dir) == 'code' else parent_dir
+
+for p in [root_dir, os.path.join(root_dir, 'code'), parent_dir]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+from main import main
 
 if __name__ == '__main__':
-    run_evaluation()
+    # Default to evaluate mode
+    if '--evaluate' not in sys.argv:
+        sys.argv.append('--evaluate')
+    main()
