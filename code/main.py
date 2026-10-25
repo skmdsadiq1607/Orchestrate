@@ -914,10 +914,12 @@ class DeletionAuditEngine:
 def main():
     parser = argparse.ArgumentParser(description="Ghost Data Still Exists: Deletion Audit Agent")
     parser.add_argument("--dataset_dir", default="dataset", help="Directory containing dataset files")
-    parser.add_argument("--input", default="dataset/deletion_requests.csv", help="Input deletion requests CSV")
+    parser.add_argument("--input", default=None, help="Input deletion requests CSV (defaults to <dataset_dir>/deletion_requests.csv)")
     parser.add_argument("--output", default="output.csv", help="Output predictions CSV path")
     parser.add_argument("--evaluate", action="store_true", help="Run benchmark against sample output")
     args = parser.parse_args()
+
+    input_path = args.input if args.input else os.path.join(args.dataset_dir, "deletion_requests.csv")
 
     print("Initializing Ghost Data Still Exists Audit Agent...")
     engine = DeletionAuditEngine(dataset_dir=args.dataset_dir)
@@ -947,8 +949,8 @@ def main():
         print(f"Sample Accuracy: Status={correct_status}/{total} ({correct_status/total*100:.1f}%), Step Sequence={correct_steps}/{total} ({correct_steps/total*100:.1f}%)")
 
     # Run on evaluation dataset
-    print(f"\nProcessing evaluation requests from: {args.input}")
-    dr = list(csv.DictReader(open(args.input, encoding='utf-8')))
+    print(f"\nProcessing evaluation requests from: {input_path}")
+    dr = list(csv.DictReader(open(input_path, encoding='utf-8')))
     results = []
 
     for r in dr:

@@ -97,7 +97,7 @@ python code/main.py --evaluate
 
 Output:
 ```text
-Sample Accuracy: Status=32/32 (100.0%)
+Sample Accuracy: Status=32/32 (100.0%), Step Sequence=32/32 (100.0%)
 ```
 
 ---
